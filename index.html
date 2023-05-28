@@ -5,28 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calendar Test</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <table class="Calendar">
-      <thead>
-        <tr>
-          <td onclick="prevCalendar();">&#60;&#60;</td>
-          <td colspan="5"><span id="calYear"></span>년 <span id="calMonth"></span>월</td>
-          <td onclick="nextCalendar();">&#62;&#62;</td>
-        </tr>
-        <tr>
-          <td>일</td>
-          <td>월</td>
-          <td>화</td>
-          <td>수</td>
-          <td>목</td>
-          <td>금</td>
-          <td>토</td>
-        </tr>
-      </thead>
+    <div>
+      <table class="Calendar">
+        <thead>
+          <tr>
+            <td onclick="prevCalendar();">&#60;&#60;</td>
+            <td colspan="5"><span id="calYear"></span>년 <span id="calMonth"></span>월</td>
+            <td onclick="nextCalendar();">&#62;&#62;</td>
+          </tr>
+          <tr>
+            <td>일</td>
+            <td>월</td>
+            <td>화</td>
+            <td>수</td>
+            <td>목</td>
+            <td>금</td>
+            <td>토</td>
+          </tr>
+        </thead>
 
-      <tbody></tbody>
-    </table>
+        <tbody></tbody>
+      </table>
+    </div>
 
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -35,6 +38,7 @@
     ></script>
     <script>
       var now = new Date();
+      var today = new Date();
       buildCalendar();
 
       function buildCalendar() {
@@ -67,7 +71,38 @@
           if (nowDay.getDay() == 6) {
             nowRow = tbody_Calendar.insertRow();
           }
+
+          // 오늘인 경우
+          if (
+            nowDay.getFullYear() == today.getFullYear() &&
+            nowDay.getMonth() == today.getMonth() &&
+            nowDay.getDate() == today.getDate()
+          ) {
+            newDIV.className = "today";
+            newDIV.onclick = function () {
+              choiceDate(this);
+            };
+          }
+          // 오늘보다 과거
+          else if (nowDay < today) {
+            newDIV.className = "pastDay";
+          }
+          // 미래인 경우
+          else {
+            newDIV.className = "futureDay";
+            newDIV.onclick = function () {
+              choiceDate(this);
+            };
+          }
         }
+      }
+
+      function choiceDate(newDIV) {
+        if (document.getElementsByClassName("choiceDay")[0]) {
+          // 기존에 선택한 날짜가 있으면
+          document.getElementsByClassName("choiceDay")[0].classList.remove("choiceDay"); // 해당 날짜의 "choiceDay" class 제거
+        }
+        newDIV.classList.add("choiceDay"); // 선택된 날짜에 "choiceDay" class 추가
       }
 
       // 이전 달 버튼 클릭
